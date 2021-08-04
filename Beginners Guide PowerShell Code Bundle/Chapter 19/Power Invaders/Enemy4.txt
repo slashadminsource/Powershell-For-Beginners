@@ -1,0 +1,68 @@
+NAME:ENEMY
+SPEED:2
+HEIGHT:6
+WIDTH:9
+FRAMES:1
+XX     XX
+  X   X  
+   XXX   
+  ##x##  
+   #x#   
+    x    
+MOVESCRIPTSTART:
+$leftBoundry = 4
+$rightBoundry = 96
+
+if($this.xPosition -le $leftBoundry)
+{
+	if($this.sTimer -ge $this.speed)
+	{
+		$this.yPosition = $this.yPosition + 7
+		$this.direction = "right"
+	}
+}
+elseif($this.xPosition -ge $rightBoundry)
+{
+	if($this.sTimer -ge $this.speed)
+	{
+		$this.yPosition = $this.yPosition + 7
+        	$this.direction = "left"
+	}
+}
+
+if($this.direction -eq "right")
+{
+	if($this.sTimer -ge $this.speed)
+	{
+		$this.xPosition++
+		$this.sTimer = 0
+	}
+}
+else
+{
+	if($this.sTimer -ge $this.speed)
+	{
+		$this.xPosition--
+		$this.sTimer = 0
+	}
+}
+
+#infinate loop for testing
+if($this.yPosition -ge 40)
+{
+	$this.yPosition = 5
+}
+
+#Randomly drop a bomb
+$random = Get-Random -Minimum 1 -Maximum 1000
+if($random -ge 990)
+{
+	$bomb = New-Object GameObject
+	$bomb.LoadObject("Bomb.txt")
+	$bomb.xPosition = $this.xPosition + 4
+	$bomb.yPosition = $this.yPosition + 6
+	$global:levels[$global:currentLevel].objects.Add($bomb)
+}
+
+$this.sTimer++
+MOVESCRIPTEND:

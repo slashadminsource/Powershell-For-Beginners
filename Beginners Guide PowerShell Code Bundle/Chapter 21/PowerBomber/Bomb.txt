@@ -1,0 +1,155 @@
+NAME:BOMB
+SPEED:0
+HEIGHT:3
+WIDTH:5
+FRAMES:1
+/---\
+| + |
+\---/
+MOVESCRIPTSTART:
+
+
+if($this.timer.Elapsed.Seconds -ge 2)
+{
+    if($this.currentAnimationFrame -eq 0)
+    {
+        $this.PlaySound("EXPLODE")
+        
+        if($this.xPosition - 5 -ge 1)
+	    {
+	        $Explode = New-Object GameObject
+		    $Explode.LoadObject("Explode.txt")
+		    $Explode.xPosition = $this.xPosition - 5
+		    $Explode.yPosition = $this.yPosition
+            $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+            $Explode.SetupJob($global:levels[$global:currentLevel])
+		    $global:levels[$global:currentLevel].objects += $Explode	
+	    }
+
+	    if($this.xPosition + 10 -le $global:displayWidth)
+	    {
+	        $Explode = New-Object GameObject
+		    $Explode.LoadObject("Explode.txt")
+		    $Explode.xPosition = $this.xPosition + 5 
+		    $Explode.yPosition = $this.yPosition
+            $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+            $Explode.SetupJob($global:levels[$global:currentLevel])
+		    $global:levels[$global:currentLevel].objects += $Explode	
+	    }
+
+	    if($this.yPosition - 3 -ge 4)
+	    {
+	        $Explode = New-Object GameObject
+		    $Explode.LoadObject("Explode.txt")
+		    $Explode.xPosition = $this.xPosition
+		    $Explode.yPosition = $this.yPosition - 3
+            $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+            $Explode.SetupJob($global:levels[$global:currentLevel])
+		    $global:levels[$global:currentLevel].objects += $Explode
+	    }
+
+	    if(($this.yPosition + 9) -lt $global:displayHeight)
+	    {
+	        $Explode = New-Object GameObject
+		    $Explode.LoadObject("Explode.txt")
+		    $Explode.xPosition = $this.xPosition
+		    $Explode.yPosition = $this.yPosition + 3
+            $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+            $Explode.SetupJob($global:levels[$global:currentLevel])
+		    $global:levels[$global:currentLevel].objects += $Explode
+	    }  
+        
+        $this.currentAnimationFrame++
+    }
+}
+
+if($this.timer.Elapsed.Seconds -ge 2 -and $this.timer.Elapsed.Milliseconds -ge 600)
+{
+    if($this.currentAnimationFrame -eq 2)
+    {
+	    if($this.xPosition - 5 -ge 1)
+	    {
+            if($this.DoesCollide(($this.xPosition - 5),$this.yPosition,$this.objectHeight,$this.objectWidth) -eq $false)
+            {
+		        $Explode = New-Object GameObject
+		        $Explode.LoadObject("Explode.txt")
+		        $Explode.xPosition = $this.xPosition - 10
+		        $Explode.yPosition = $this.yPosition
+                $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+                $Explode.SetupJob($global:levels[$global:currentLevel])
+		        $global:levels[$global:currentLevel].objects += $Explode
+            }
+	    }
+
+	    if($this.xPosition + 10 -le $global:displayWidth)
+	    {
+            if($this.DoesCollide(($this.xPosition + 5),$this.yPosition,$this.objectHeight,$this.objectWidth) -eq $false)
+            {
+                $Explode = New-Object GameObject
+		        $Explode.LoadObject("Explode.txt")
+		        $Explode.xPosition = $this.xPosition + 10 
+		        $Explode.yPosition = $this.yPosition
+                $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+                $Explode.SetupJob($global:levels[$global:currentLevel])
+		        $global:levels[$global:currentLevel].objects += $Explode
+            }
+	    }
+
+	    if($this.yPosition - 3 -ge 4)
+	    {
+            if($this.DoesCollide($this.xPosition,($this.yPosition - 3),$this.objectHeight,$this.objectWidth) -eq $false)
+            {
+                $Explode = New-Object GameObject
+		        $Explode.LoadObject("Explode.txt")
+		        $Explode.xPosition = $this.xPosition
+		        $Explode.yPosition = $this.yPosition - 6
+                $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+                $Explode.SetupJob($global:levels[$global:currentLevel])
+		        $global:levels[$global:currentLevel].objects += $Explode
+            }
+	    }
+
+	    if(($this.yPosition + 10) -lt $global:displayHeight)
+	    {
+            if($this.DoesCollide($this.xPosition,($this.yPosition + 3),$this.objectHeight,$this.objectWidth) -eq $false)
+            {
+                #$Explode.xPosition = $this.xPosition
+		        #$Explode.yPosition = $this.yPosition + 3
+
+		        $Explode = New-Object GameObject
+		        $Explode.LoadObject("Explode.txt")
+    	        $Explode.xPosition = $this.xPosition
+		        $Explode.yPosition = $this.yPosition + 6
+                $Explode.OriginID  = $this.OriginID #pass the spawing character down to the explosion objects
+                $Explode.SetupJob($global:levels[$global:currentLevel])
+		        $global:levels[$global:currentLevel].objects += $Explode	
+            }
+	    }
+        
+        $this.currentAnimationFrame++
+    }
+}
+
+if($this.timer.Elapsed.seconds -ge 2)
+{
+    $this.hidden = $true
+}
+
+if($this.timer.Elapsed.Seconds -ge 4)
+{
+	$this.dead = $true
+}
+
+MOVESCRIPTEND:
+
+SOUNDSCRIPTSTART:
+NAME:EXPLODE
+[console]::beep(60,100)
+[console]::beep(70,100)
+[console]::beep(80,100)
+[console]::beep(100,100)
+[console]::beep(150,100)
+[console]::beep(90,100)
+[console]::beep(60,100)
+[console]::beep(70,100)
+SOUNDSCRIPTEND:

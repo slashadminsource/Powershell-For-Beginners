@@ -1,0 +1,14 @@
+NAME:PLAYERROCKET
+SPEED:1
+HEIGHT:1
+WIDTH:1
+FRAMES:1
+*
+MOVESCRIPTSTART:
+$this.yPosition-- 
+
+if($this.yPosition -le 2)
+{
+	$this.dead = $true
+}
+MOVESCRIPTEND:

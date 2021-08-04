@@ -1,0 +1,156 @@
+NAME:ENEMY
+SPEED:6
+HEIGHT:3
+WIDTH:5
+FRAMES:1
+{> <}
+==#==
+ / \ 
+MOVESCRIPTSTART:
+
+#if we have no objectives then made a decision on what to do next
+#"objective:" + $this.objective >> debug.txt
+#"sub objective:" + $this.subObjective >> debug.txt
+
+
+#Look around to see whats close
+$closestPlayer  = $this.DistanceToTarget("PLAYER")
+$closestBomb    = $this.DistanceToTarget("BOMB")
+
+if($this.objective -eq "NONE")
+{
+	#Choose what to do depending on whats close
+
+	#NONE
+	#MOVETOPLAYER
+	#EVADEBOMB
+        
+	if($closestBomb.distance -lt 7)
+	{
+        #EVADEBOMB
+		$this.objective = "EVADEBOMB"
+        
+        $eX = 0
+        $eY = 0
+
+        Do
+        {
+            #find somewhere to run to and check for no collisions.
+            $eX = $this.xPosition + ($this.objectWidth  * (Get-Random -Maximum 3 -Minimum -3))
+            $eY = $this.yPosition + ($this.objectHeight * (Get-Random -Maximum 3 -Minimum -3))
+            $collide = $this.DoesCollide($eX, $eY, $this.objectHeight, $this.objectWidth)
+        }
+        While($collide -eq $true)
+        
+        #get path to target position
+        $this.path = $global:pathFinder.FindPath($this, $eX, $eY)
+	}
+   	elseif($closestPlayer.distance -lt 10)
+	{
+		#MOVETOPLAYER
+		$this.objective = "MOVETOPLAYER"
+
+        #get target position to next block        
+        [Target]$position = $this.PositionNextToTarget($closestPlayer.object)
+
+        #get path to target position
+        $this.path = $global:pathFinder.FindPath($this, $position.object.xPosition, $position.object.yPosition)
+	}
+	else
+	{
+    	#NONE
+		$this.objective = "NONE"
+        #write-host "none"
+        #pause
+
+	}
+}
+else
+{
+	if($this.objective -eq "WAIT")
+    {
+        $this.sTimer--
+        
+        if($this.sTimer -le 0)
+        {
+            #end wait action
+            $this.objective = "NONE"
+		    $this.subObjective = "NONE"
+        }
+    }
+    elseif($this.objective -eq "EVADEBOMB")
+	{
+        if($this.path.Count -gt 0)
+        {
+            #slow movement down
+            $this.sTimer++
+           
+            if($this.sTimer -lt ($this.speed/2))
+            {
+            }
+            else
+            {
+	            #check if moving out of bounds
+                if($this.BoundryCheck($this.path[0].x, $this.path[0].y, $this.objectHeight, $this.objectWidth))
+                {
+                    $this.xPosition = $this.path[0].x
+                    $this.yPosition = $this.path[0].y
+                
+                    #remove top position from path
+                    $this.path.RemoveAt(0)
+
+                    $this.sTimer = 0
+                }
+                else
+                {
+                    #path collides or goes out of screen bounds
+                    #remove rest of path
+                    $this.path = $null
+                    $this.objective = "NONE"
+		            $this.subObjective = "NONE"
+                }
+            }
+        }
+        else
+        {
+            #END ACTION START WAIT
+            $this.sTimer = 30
+            $this.objective = "WAIT"
+		    $this.subObjective = "NONE"
+        }
+	}
+   	elseif($this.objective -eq "MOVETOPLAYER")
+	{
+        if($this.path.Count -gt 0)
+        {
+            #slow movement down
+            $this.sTimer++
+
+            if($this.sTimer -lt $this.speed)
+            {
+            }
+            else
+            {
+	            #move to way point
+		
+                #move to next position on path
+                $this.xPosition = $this.path[0].x
+                $this.yPosition = $this.path[0].y
+
+                #remove top position from path
+                $this.path.RemoveAt(0)
+
+                $this.sTimer = 0
+            }
+        }
+        else
+        {
+            #if at end of way points
+            $this.objective = "NONE"
+		    $this.subObjective = "NONE"
+        }
+	}
+}
+
+
+MOVESCRIPTEND:

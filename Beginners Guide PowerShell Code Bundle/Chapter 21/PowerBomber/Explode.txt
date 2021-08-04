@@ -1,0 +1,16 @@
+NAME:EXPLODE
+SPEED:0
+HEIGHT:3
+WIDTH:5
+FRAMES:1
++++++
++++++
++++++
+MOVESCRIPTSTART:
+
+if($this.timer.Elapsed.Milliseconds -ge 400)
+{
+	$this.dead = $true
+}
+
+MOVESCRIPTEND:

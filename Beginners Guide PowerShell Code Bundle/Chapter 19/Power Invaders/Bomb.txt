@@ -1,0 +1,14 @@
+NAME:BOMB
+SPEED:1
+HEIGHT:1
+WIDTH:1
+FRAMES:1
+*
+MOVESCRIPTSTART:
+$this.yPosition++ 
+
+if($this.yPosition -ge 54)
+{
+	$this.dead = $true
+}
+MOVESCRIPTEND:

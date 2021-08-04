@@ -1,0 +1,13 @@
+NAME:HIDEBLOCK
+SPEED:1
+HEIGHT:4
+WIDTH:7
+FRAMES:1
+ ##### 
+#######
+#######
+#######
+MOVESCRIPTSTART:
+
+MOVESCRIPTEND:
+

@@ -1,0 +1,24 @@
+NAME:PLAYER
+SPEED:1
+HEIGHT:3
+WIDTH:5
+FRAMES:1
+[0 0]
+--#--
+ / \ 
+MOVESCRIPTSTART:
+
+MOVESCRIPTEND:
+
+SOUNDSCRIPTSTART:
+NAME:DEATH
+[console]::beep(440,200) 
+[console]::beep(340,200) 
+[console]::beep(240,200) 
+[console]::beep(149,200)
+SOUNDSCRIPTEND:
+
+SOUNDSCRIPTSTART:
+NAME:MOVE
+[console]::beep(60,100)
+SOUNDSCRIPTEND:
